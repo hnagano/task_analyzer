@@ -7,18 +7,15 @@ static const int NUM_THREADS = 9;
 static void func_thread(void) {
 	pthread_t tid;
 	struct timespec time;
-	int i;
 
 	tid = pthread_self();
-	/* printf is thread safe */
 
 	clock_gettime(CLOCK_MONOTONIC, &time);
+	/* printf is thread safe */
 	/* printf("thread start: %x sec=%ld nsec=%ld\n", (unsigned int)tid, time.tv_sec,time.tv_nsec); */
 	printf("%x,TS_Start,%ld\n", (unsigned int)tid,time.tv_nsec);
 
-	/* for (int i = 0; i < 0xFFFF; i++) { */
-	/* } */
-	/* sleep(1); */
+	/* for (int i = 0; i < 0xFFFF; i++) { } */
 
 	clock_gettime(CLOCK_MONOTONIC, &time);
 	/* printf("thread   end: %x sec=%ld nsec=%ld\n", (unsigned int)tid, time.tv_sec,time.tv_nsec); */
