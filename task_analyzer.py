@@ -127,8 +127,8 @@ def read_eventlist_csv(filename):
 def main():
     graph = TaskGraph()
 
-    eventlist = read_eventlist_csv('sample_log.csv')
-    #  eventlist = read_eventlist_csv('./posix/log_sample_posix.csv')
+    #  eventlist = read_eventlist_csv('sample_log.csv')
+    eventlist = read_eventlist_csv('./posix/log_sample_posix.csv')
     print(eventlist)
 
     runinfo_list = generate_run_sequence(eventlist)
