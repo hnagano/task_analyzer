@@ -6,6 +6,14 @@ import csv
 task_dict = {
         "task_1" : 0,
         "task_2" : 1,
+        #  "893d000" : 0,
+        #  "893d000" : 1,
+        #  "89c0000" : 2,
+        #  "8a43000" : 3,
+        #  "89c0000" : 4,
+        #  "8a43000" : 5,
+        #  "8ac6000" : 6,
+        #  "8ac6000" : 7,
         }
 
 
@@ -89,17 +97,20 @@ class SectionInfo(object):
 def generate_run_sequence(eventlist):
     runinfo_list = []
     section = SectionInfo('TS_Start', 'TS_End')
+    startTime_record = {}
     
     #parse event list into run info
-    id = -1
     for event in eventlist:
         if event.type == section.start_symbol:
-            id = event.id
             startTime = event.time
-        elif event.type == section.end_symbol and event.id == id:
+            startTime_record[event.id] = startTime
+            print(type(event.id))
+        elif event.type == section.end_symbol:
             endTime = event.time
-            #  print("append " + str(startTime) + ", " + str(endTime))
-            runinfo_list.append(RunInfo(id, startTime, endTime))
+            startTime = startTime_record[event.id]
+            #  print("append {},{},{} ".format(event.id, str(startTime), str(endTime)))
+            runinfo_list.append(RunInfo(event.id, startTime, endTime))
+            del startTime_record[event.id]
 
 
     return runinfo_list
@@ -123,6 +134,7 @@ def main():
     graph = TaskGraph()
 
     eventlist = read_eventlist_csv('sample_log.csv')
+    #  eventlist = read_eventlist_csv('./posix/log_sample_posix.csv')
     print(eventlist)
 
     runinfo_list = generate_run_sequence(eventlist)
