@@ -3,18 +3,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import csv
 
-task_dict = {
-        "task_1" : 0,
-        "task_2" : 1,
-        #  "893d000" : 0,
-        #  "893d000" : 1,
-        #  "89c0000" : 2,
-        #  "8a43000" : 3,
-        #  "89c0000" : 4,
-        #  "8a43000" : 5,
-        #  "8ac6000" : 6,
-        #  "8ac6000" : 7,
-        }
+task_dict = {}
 
 
 class Event(object):
@@ -104,7 +93,6 @@ def generate_run_sequence(eventlist):
         if event.type == section.start_symbol:
             startTime = event.time
             startTime_record[event.id] = startTime
-            print(type(event.id))
         elif event.type == section.end_symbol:
             endTime = event.time
             startTime = startTime_record[event.id]
@@ -118,13 +106,19 @@ def generate_run_sequence(eventlist):
 def read_eventlist_csv(filename):
 
     eventlist = []
+    event_count = 0
     with open(filename, 'r') as f:
         reader = csv.reader(f)
         # parse csv into event
         for row in reader:
             event = Event()
             task_name = row[0]
-            event.id = task_dict[task_name]
+            if task_name in task_dict.keys():
+                event.id = task_dict[task_name]
+            else:
+                event.id = event_count
+                task_dict[task_name] = event.id
+                event_count += 1
             event.type = row[1]
             event.time = float(row[2])
             eventlist.append(event)
