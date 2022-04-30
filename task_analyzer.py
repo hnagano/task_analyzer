@@ -3,9 +3,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import csv
 
-task_dict = {}
-
-
 class Event(object):
     def __init__(self):
         self.type = ''
@@ -29,6 +26,7 @@ class TaskGraph(object):
     def __init__(self):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
+        self.task_dict = []
         self.runinfo_list = []
         pass
 
@@ -36,7 +34,8 @@ class TaskGraph(object):
         #self.x_range = x_range
         #pass
 
-    def add_run_info(self, runinfo_list):
+    def add_run_info(self, task_dict, runinfo_list):
+        self.task_dict = task_dict
         self.runinfo_list = runinfo_list
 
     def show(self):
@@ -66,7 +65,7 @@ class TaskGraph(object):
         #  plt.text(-50, 0.5, 'Task 1')
         my_yticks = []
         y_ticks_num = []
-        for item in task_dict.items():
+        for item in self.task_dict.items():
             index = item[1]
             name = item[0]
             my_yticks.insert(index, name)
@@ -106,6 +105,7 @@ def generate_run_sequence(eventlist):
 def read_eventlist_csv(filename):
 
     eventlist = []
+    task_dict = {}
     event_count = 0
     with open(filename, 'r') as f:
         reader = csv.reader(f)
@@ -122,19 +122,19 @@ def read_eventlist_csv(filename):
             event.type = row[1]
             event.time = float(row[2])
             eventlist.append(event)
-    return eventlist
+    return eventlist, task_dict
 
 def main():
     graph = TaskGraph()
 
     #  eventlist = read_eventlist_csv('sample_log.csv')
-    eventlist = read_eventlist_csv('./posix/log_sample_posix.csv')
+    eventlist, task_dict = read_eventlist_csv('./posix/log_sample_posix.csv')
     print(eventlist)
 
     runinfo_list = generate_run_sequence(eventlist)
     print(runinfo_list)
 
-    graph.add_run_info(runinfo_list)
+    graph.add_run_info(task_dict, runinfo_list)
     #graph.set_range((22648, 26607))
     graph.show()
 
